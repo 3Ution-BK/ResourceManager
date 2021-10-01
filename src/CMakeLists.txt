@@ -1,0 +1,50 @@
+set(LIBRARY_NAME ${PROJECT_NAME})
+
+include(${${PROJECT_NAME}_MODULE_DIR}/CompilerOptions.cmake)
+
+set(${LIBRARY_NAME}_INCLUDE_CODE_DIR "${${PROJECT_NAME}_INCLUDE_DIR}/${LIBRARY_NAME}")
+set(${LIBRARY_NAME}_SOURCE_CODE_DIR "${${PROJECT_NAME}_SOURCE_DIR}/${LIBRARY_NAME}")
+
+set(${LIBRARY_NAME}_HEADER_CODE
+    ${${LIBRARY_NAME}_INCLUDE_CODE_DIR}/Detail/IsCreateExist.hpp
+    ${${LIBRARY_NAME}_INCLUDE_CODE_DIR}/ResourceBase.hpp
+    ${${LIBRARY_NAME}_INCLUDE_CODE_DIR}/ResourceManager.hpp
+    ${${LIBRARY_NAME}_INCLUDE_CODE_DIR}/ResourceLoadException.hpp
+)
+
+set(${LIBRARY_NAME}_SOURCE_CODE
+    ${${LIBRARY_NAME}_SOURCE_CODE_DIR}/ResourceBase.cpp
+    ${${LIBRARY_NAME}_SOURCE_CODE_DIR}/ResourceManager.cpp
+    ${${LIBRARY_NAME}_SOURCE_CODE_DIR}/ResourceLoadException.cpp
+)
+
+add_library(${LIBRARY_NAME}
+    STATIC
+        ${${LIBRARY_NAME}_HEADER_CODE}
+        ${${LIBRARY_NAME}_SOURCE_CODE}
+)
+
+set_target_properties(${LIBRARY_NAME}
+    PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/${LIBRARY_NAME}/$<CONFIG>
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/${LIBRARY_NAME}/$<CONFIG>
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${LIBRARY_NAME}/$<CONFIG>
+)
+
+target_include_directories(${LIBRARY_NAME}
+    PUBLIC
+        ${${PROJECT_NAME}_INCLUDE_DIR}
+    PRIVATE
+        ${${PROJECT_NAME}_SOURCE_DIR}
+)
+
+target_compile_features(${LIBRARY_NAME}
+    PUBLIC
+        cxx_std_11
+)
+
+target_compile_options(${LIBRARY_NAME}
+    PUBLIC
+        "$<$<CONFIG:DEBUG>:${${PROJECT_NAME}_CXX_FLAGS_DEBUG}>"
+        "$<$<CONFIG:RELEASE>:${${PROJECT_NAME}_CXX_FLAGS_RELEASE}>"
+)
